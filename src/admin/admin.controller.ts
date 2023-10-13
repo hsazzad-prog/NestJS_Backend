@@ -66,5 +66,9 @@ uploadFile(@UploadedFile() file: Express.Multer.File) {
  res.sendFile(name,{ root: './upload' })
  }
 
-
+@Post('addadmin')
+@UsePipes(new ValidationPipe())
+addAdmin(@Body() adminInfo:AdminInfo) {
+return this.adminService.addAdmin(adminInfo);
+}
 }

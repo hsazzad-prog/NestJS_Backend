@@ -11,14 +11,41 @@ export class AdminService {
     private adminRepo: Repository<AdminEntity>
   )
   {}
-  getHello(): string {
-    return 'Hello World!';
+  getAll(): Promise<AdminEntity[]> {
+    return this.adminRepo.find(
+      {
+        select:{
+          name: true,
+          username: true
+        
+        },
+         where: [
+           { name: "Timber"},
+           {username: "Stan" },
+         ]
+        }
+        )
+          
+        }
+      
+    );
   }
 
-  addAdmin(adminInfo:AdminInfo):Promise<AdminEntity>
+getUserByID(id:number): Promise<AdminEntity> {
+return this.adminRepo.findOneBy({id:id});
+}
+
+ async addAdmin(adminInfo:AdminInfo):Promise<AdminEntity[]>
   {
-   const res = this.adminRepo.save(adminInfo);
-   return res;
+   const res = await this.adminRepo.save(adminInfo);
+   return this.adminRepo.find();
+  }
+
+  updateAdmin(id:number, adminInfo:AdminInfo):Promise<AdminEntity>
+  {
+   const res=  this.adminRepo.update(id,adminInfo);
+
+     return this.adminRepo.findOneBy({id});
   }
 
 

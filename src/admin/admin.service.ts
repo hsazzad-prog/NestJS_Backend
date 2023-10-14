@@ -18,16 +18,9 @@ export class AdminService {
           name: true,
           username: true
         
-        },
-         where: [
-           { name: "Timber"},
-           {username: "Stan" },
-         ]
         }
-        )
-          
-        }
-      
+        
+      }
     );
   }
 

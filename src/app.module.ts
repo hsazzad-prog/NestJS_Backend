@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ManagerController } from './manager.controller';
+import { ManagerController } from 'src/manager/manager.controller';
 import { AdminModule } from './admin/admin.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 

@@ -96,6 +96,20 @@ updateAdmin(@Param('id') id:number, @Body() adminInfo:AdminInfo)
   return this.adminService.updateAdmin(id,adminInfo);
 }
 
-
+@Post('/addmanager')
+addManager(@Body() managerInfo)
+{
+return this.adminService.addManager(managerInfo);
+}
+@Get('getmanagers/:id')
+getManagers(@Param('id') id:number)
+{
+return this.adminService.getManagers(id);
+}
+@Get('getadminbymanager/:id')
+getAdminByManager(@Param('id') id:number)
+{
+  return this.adminService.getAdminByManager(id);
+}
 
 }

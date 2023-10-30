@@ -4,6 +4,7 @@ import { AdminEntity } from './admin.entity';
 import { Repository } from 'typeorm';
 import { AdminInfo } from './admin.dto';
 import { ManagerEntity } from 'src/manager/manager.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminService {
@@ -34,6 +35,10 @@ return this.adminRepo.findOneBy({id:id});
 
  async addAdmin(adminInfo:AdminInfo):Promise<AdminEntity[]>
   {
+    const password = adminInfo.password;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    adminInfo.password = hashedPassword;
    const res = await this.adminRepo.save(adminInfo);
    return this.adminRepo.find();
   }
@@ -72,4 +77,20 @@ return this.managerRepo.find(
 )
 
 }
+async login(adminInfo:AdminInfo)
+{
+  const admin = 
+  await this.adminRepo.findOneBy({username:adminInfo.username});
+  const result = 
+  await bcrypt.compare(adminInfo.password, admin.password);
+if(result)
+{
+  return true;
+}
+else{
+  return false;
+}
+
+}
+
 }

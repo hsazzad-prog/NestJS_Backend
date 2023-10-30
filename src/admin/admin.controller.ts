@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Res, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Put, Query, Res, Session, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminInfo } from './admin.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterError, diskStorage } from 'multer';
 import { AdminEntity } from './admin.entity';
+import { SessionGuard } from './admin.guards';
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
@@ -15,7 +16,9 @@ export class AdminController {
 
   
   @Get('index')
-  getIndex() {
+  @UseGuards(SessionGuard)
+  getIndex(@Session() session) {
+console.log(session.email);
     return this.adminService.getAll();
     
   }
@@ -111,5 +114,23 @@ getAdminByManager(@Param('id') id:number)
 {
   return this.adminService.getAdminByManager(id);
 }
+
+@Post('login')
+async login(@Body() adminInfo:AdminInfo, 
+@Session() session)
+{
+ if(await this.adminService.login(adminInfo))
+ {
+  session.email=adminInfo.username;
+  return true;
+ }
+ else
+ {
+  throw new HttpException('UnauthorizedException', 
+  HttpStatus.UNAUTHORIZED); 
+
+ }
+}
+
 
 }
